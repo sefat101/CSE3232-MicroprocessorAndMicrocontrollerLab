@@ -22,19 +22,27 @@ int main(void) {
 
 	RCC_CR &= ~(1 << 24);
 
-//	RCC_CFGR &= ~(1 << 16);
+//	RCC_CFGR &= ~(1 << 16); 
+	//this line is not necessary because the chip naturally starts with that bit at 0
+	
 	RCC_CFGR &= ~(3 << 0);
 	RCC_CFGR |= (1 << 1);
-//	while((RCC_CFGR & (3 << 2)) != (0 << 2));
+	
 
+	
 	RCC_CFGR &= ~(15 << 18);
 	RCC_CFGR |= (1 << 19);
 
 	RCC_CR |= (1 << 24);
 
-//	while((RCC_CFGR & (3 << 2)) != (0 << 2));
+//	while(!(RCC_CR & (1 << 25))); 
+	////better to use for stable system 
+	//it waits for two things i)wait for source / pll to be ready  ii)wait for the cpu to actually start using that source 
+	//this first loop is actually for pll
 
-//	RCC_CFGR
+//	while((RCC_CFGR & (3 << 2)) != (0 << 2)); 
+	//same as before
+	//this one is for the clock switch 
 
 	RCC_APB2ENR |= (1 << 4);
 	RCC_APB1ENR |= (1 << 0);
@@ -45,10 +53,10 @@ int main(void) {
 
 	while(1) {
 		GPIOC_ODR |= (1 << 13);
-		delay(1000); //ms
+		delay(1000); 
 
 		GPIOC_ODR &= ~(1 << 13);
-		delay(1000); //ms
+		delay(1000); 
 	}
 }
 
